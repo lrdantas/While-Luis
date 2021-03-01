@@ -1,7 +1,9 @@
 package plp.enquanto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.text.html.ParagraphView;
 
@@ -37,13 +39,32 @@ public class Regras extends EnquantoBaseListener {
 	public void exitLeia(LeiaContext ctx) {
 		valores.insira(ctx, leia);
 	}
-
+	
 	@Override
-	public void exitSe(SeContext ctx) {
-		final Bool condicao = valores.pegue(ctx.booleano());
-		final Comando entao = valores.pegue(ctx.comando(0));
-		final Comando senao = valores.pegue(ctx.comando(1));
-		valores.insira(ctx, new Se(condicao, entao, senao));
+    public void exitSe(SeContext ctx) {
+        final Bool condicao = valores.pegue(ctx.booleano(0));
+
+        final Comando entao = valores.pegue(ctx.comando(0));
+        final Comando senao = valores.pegue(ctx.comando(ctx.booleano().size()));
+        
+        final Map<Comando, Bool> seEntaoLista = new HashMap<Comando, Bool>();
+
+        if (ctx.booleano().size() > 1) {
+            for (int i = 1; i < ctx.booleano().size(); i++) {
+                final Bool _condicao = valores.pegue(ctx.booleano(i));
+                final Comando _comando = valores.pegue(ctx.comando(i));
+
+                seEntaoLista.put(_comando, _condicao);             
+            }
+        }
+
+        valores.insira(ctx, new Se(condicao, entao, senao, seEntaoLista));
+    }
+	
+	@Override
+	public void exitFuncao(FuncaoContext ctx) {
+		final List<Id> parametros = new ArrayList<Id>();
+		super.exitFuncao(ctx);
 	}
 
 	@Override

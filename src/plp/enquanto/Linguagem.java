@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import plp.enquanto.Linguagem.Bool;
+import plp.enquanto.Linguagem.Comando;
+
 interface Linguagem {
 	Map<String, Integer> ambiente = new HashMap<>();
 	Scanner scanner = new Scanner(System.in);
@@ -38,39 +41,34 @@ interface Linguagem {
 		private final Bool condicao;
 		private final Comando entao;
 		private final Comando senao;
+		private final Map<Comando, Bool> seEntaoLista;
 
-		public Se(Bool condicao, Comando entao, Comando senao) {
+		public Se(Bool condicao, Comando entao, Comando senao, Map<Comando, Bool> seEntaoLista) {
 			this.condicao = condicao;
 			this.entao = entao;
 			this.senao = senao;
+			this.seEntaoLista = seEntaoLista;
 		}
 
 		@Override
 		public void execute() {
+			Bool senaoSe = condicao;
+			Comando _entao = entao;
 			if (condicao.getValor())
 				entao.execute();
-			else
-				senao.execute();
-		}
-	}
-	
-	class SeNaoSe implements Comando {
-		private final Bool condicao;
-		private final Comando entao;
-		private final Comando senao;
-
-		public SeNaoSe(Bool condicao, Comando entao, Comando senao) {
-			this.condicao = condicao;
-			this.entao = entao;
-			this.senao = senao;
-		}
-
-		@Override
-		public void execute() {
-			if (condicao.getValor())
-				entao.execute();
-			else
-				senao.execute();
+			else if (!seEntaoLista.isEmpty()) {			
+				for (Comando comando : seEntaoLista.keySet()) {
+					senaoSe = seEntaoLista.get(comando);
+					if (senaoSe.getValor()) {
+						_entao = comando;
+						break;
+					}				
+				}
+				if (senaoSe.getValor())
+					_entao.execute();
+			} else {
+				senao.execute();	
+			}						
 		}
 	}
 

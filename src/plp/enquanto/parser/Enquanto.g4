@@ -4,10 +4,10 @@ programa : seqComando;     // sequência de comandos
 
 seqComando: comando (';' comando)* ;
 
-comando: ID ':=' func                                  # atribuicao
+comando: ID ':=' func                                    # atribuicao
 	   | ID ':=' expressao                               # atribuicao
        | 'skip'                                          # skip
-       | 'se' booleano 'entao' comando ('senaose')*? comando 'senao' comando   # se
+       | 'se' booleano 'entao' comando ('senaose' booleano 'entao' comando)*? 'senao' comando   # se
        | 'enquanto' booleano 'faca' comando              # enquanto
        | 'para' ID 'de' expressao 'ate' expressao ('passo' expressao)? 'faca' comando	# para
        | 'exiba' TEXTO                                   # exiba
