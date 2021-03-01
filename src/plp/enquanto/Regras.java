@@ -3,6 +3,8 @@ package plp.enquanto;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.text.html.ParagraphView;
+
 import plp.enquanto.Linguagem.*;
 import plp.enquanto.parser.EnquantoBaseListener;
 import plp.enquanto.parser.EnquantoParser.*;
@@ -100,11 +102,19 @@ public class Regras extends EnquantoBaseListener {
 		final Expressao esq = valores.pegue(ctx.expressao(0));
 		final Expressao dir = valores.pegue(ctx.expressao(1));
 		final String op = ctx.getChild(1).getText();
-		final Expressao exp = switch (op) {
-			case "*" -> new ExpMult(esq, dir);
-			case "-" -> new ExpSub(esq, dir);
-			default  -> new ExpSoma(esq, dir);
-		};
+		final Expressao exp;	
+		
+		if (op.equals("^")) {
+			 exp = new ExpExpon(esq, dir);
+		} else if (op.equals("*")) {
+			 exp = new ExpMult(esq, dir);
+		} else if (op.equals("/")) {
+			 exp = new ExpDiv(esq, dir);
+		} else if (op.equals("-")) {
+			 exp = new ExpSub(esq, dir);
+		} else {
+			 exp =  new ExpSoma(esq, dir);
+		}
 		valores.insira(ctx, exp);
 	}
 
@@ -114,12 +124,38 @@ public class Regras extends EnquantoBaseListener {
 		final Comando comando = valores.pegue(ctx.comando());
 		valores.insira(ctx, new Enquanto(condicao, comando));
 	}
+	
+	@Override
+	public void exitPara(ParaContext ctx) {
+		final String id = ctx.ID().getText();
+		final Expressao inicio = valores.pegue(ctx.expressao(0));
+		final Expressao fim = valores.pegue(ctx.expressao(1));
+		final Expressao passo = valores.pegue(ctx.expressao(2));
+		final Comando comando = valores.pegue(ctx.comando());
+		
+		valores.insira(ctx, new Para(id,inicio,fim,passo,comando));
+		super.exitPara(ctx);
+	}
 
 	@Override
 	public void exitELogico(ELogicoContext ctx) {
 		final Bool esq = valores.pegue(ctx.booleano(0));
 		final Bool dir = valores.pegue(ctx.booleano(1));
 		valores.insira(ctx, new ELogico(esq, dir));
+	}
+	
+	@Override
+	public void exitOuLogico(OuLogicoContext ctx) {
+		final Bool esq = valores.pegue(ctx.booleano(0));
+		final Bool dir = valores.pegue(ctx.booleano(1));
+		valores.insira(ctx, new OuLogico(esq, dir));
+	}
+	
+	@Override
+	public void exitXorLogico(XorLogicoContext ctx) {
+		final Bool esq = valores.pegue(ctx.booleano(0));
+		final Bool dir = valores.pegue(ctx.booleano(1));
+		valores.insira(ctx, new XorLogico(esq, dir));
 	}
 
 	@Override
@@ -152,11 +188,22 @@ public class Regras extends EnquantoBaseListener {
 		final Expressao esq = valores.pegue(ctx.expressao(0));
 		final Expressao dir = valores.pegue(ctx.expressao(1));
 		final String op = ctx.getChild(1).getText();
-		final Bool exp = switch (op) {
-			case "="  -> new ExpIgual(esq, dir);
-			case "<=" -> new ExpMenorIgual(esq, dir);
-			default   -> new ExpIgual(esq, esq);
-		};
+		final Bool exp;
+		
+		if (op.equals("=")) {
+			exp = new ExpIgual(esq, dir);
+		} else if (op.equals( "<=")) {
+			exp = new ExpMenorIgual(esq, dir);
+		} else if (op.equals( ">=")) {
+			exp = new ExpMaiorIgual(esq, dir);
+		} else if (op.equals( "<")) {
+			exp = new ExpMenor(esq, dir);
+		} else if (op.equals( ">")) {
+				exp = new ExpMaior(esq, dir);
+		} else {
+			exp = new ExpDiferente(esq, esq);
+		}
+	
 		valores.insira(ctx, exp);
 	}
 }

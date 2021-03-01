@@ -53,6 +53,26 @@ interface Linguagem {
 				senao.execute();
 		}
 	}
+	
+	class SeNaoSe implements Comando {
+		private final Bool condicao;
+		private final Comando entao;
+		private final Comando senao;
+
+		public SeNaoSe(Bool condicao, Comando entao, Comando senao) {
+			this.condicao = condicao;
+			this.entao = entao;
+			this.senao = senao;
+		}
+
+		@Override
+		public void execute() {
+			if (condicao.getValor())
+				entao.execute();
+			else
+				senao.execute();
+		}
+	}
 
 	Skip skip = new Skip();
 	class Skip implements Comando {
@@ -85,6 +105,35 @@ interface Linguagem {
 		@Override
 		public void execute() {
 			while (condicao.getValor()) {
+				comando.execute();
+			}
+		}
+	}
+	
+	class Para implements Comando {
+		private final Comando comando;
+		private final String id;
+		private final Expressao valInicial;
+		private final Expressao valFinal;
+		private final Expressao valpasso;
+
+		public Para( String id, Expressao valInicial, Expressao valFinal, Expressao valpasso, Comando comando) {
+			this.id = id;
+			this.valInicial= valInicial;
+			this.valFinal = valFinal;
+			this.valpasso = valpasso;
+			this.comando = comando;
+		}
+
+		@Override
+		public void execute() {			
+			int inicio = valInicial.getValor();
+			int fim = valFinal.getValor();
+			int passo = valpasso.getValor() != 0 ? valpasso.getValor() : 1;
+			
+			while (inicio <= fim) {
+				ambiente.put(id, Integer.valueOf(inicio));
+				inicio = inicio + passo;
 				comando.execute();
 			}
 		}
@@ -197,6 +246,18 @@ interface Linguagem {
 			return esq.getValor() + dir.getValor();
 		}
 	}
+	
+	class ExpExpon extends OpBin<Expressao> implements Expressao {
+		ExpExpon(Expressao esq, Expressao dir) {
+			super(esq, dir);
+		}
+
+		@Override
+		public int getValor() {
+			return (int) Math.pow(esq.getValor(), dir.getValor()) ;
+		}
+	}
+
 
 	class ExpSub extends OpBin<Expressao> implements Expressao {
 		ExpSub(Expressao esq, Expressao dir) {
@@ -217,6 +278,17 @@ interface Linguagem {
 		@Override
 		public int getValor() {
 			return esq.getValor() * dir.getValor();
+		}
+	}
+	
+	class ExpDiv extends OpBin<Expressao> implements Expressao{
+		ExpDiv(Expressao esq, Expressao dir) {
+			super(esq, dir);
+		}
+
+		@Override
+		public int getValor() {
+			return esq.getValor() / dir.getValor();
 		}
 	}
 
@@ -254,6 +326,50 @@ interface Linguagem {
 			return esq.getValor() <= dir.getValor();
 		}
 	}
+	
+	class ExpMaiorIgual extends OpBin<Expressao> implements Bool{
+		ExpMaiorIgual(Expressao esq, Expressao dir) {
+			super(esq, dir);
+		}
+
+		@Override
+		public boolean getValor() {
+			return esq.getValor() >= dir.getValor();
+		}
+	}
+	
+	class ExpMenor extends OpBin<Expressao> implements Bool{
+		ExpMenor(Expressao esq, Expressao dir) {
+			super(esq, dir);
+		}
+
+		@Override
+		public boolean getValor() {
+			return esq.getValor() < dir.getValor();
+		}
+	}
+	
+	class ExpMaior extends OpBin<Expressao> implements Bool{
+		ExpMaior(Expressao esq, Expressao dir) {
+			super(esq, dir);
+		}
+
+		@Override
+		public boolean getValor() {
+			return esq.getValor() > dir.getValor();
+		}
+	}
+	
+	class ExpDiferente extends OpBin<Expressao> implements Bool{
+		ExpDiferente(Expressao esq, Expressao dir) {
+			super(esq, dir);
+		}
+
+		@Override
+		public boolean getValor() {
+			return esq.getValor() != dir.getValor();
+		}
+	}
 
 	class NaoLogico extends OpUnaria<Bool> implements Bool{
 		NaoLogico(Bool operando) {
@@ -274,6 +390,28 @@ interface Linguagem {
 		@Override
 		public boolean getValor() {
 			return esq.getValor() && dir.getValor();
+		}
+	}
+	
+	class OuLogico extends OpBin<Bool> implements Bool{
+		OuLogico(Bool esq, Bool dir) {
+			super(esq, dir);
+		}
+
+		@Override
+		public boolean getValor() {
+			return esq.getValor() || dir.getValor();
+		}
+	}
+	
+	class XorLogico extends OpBin<Bool> implements Bool{
+		XorLogico(Bool esq, Bool dir) {
+			super(esq, dir);
+		}
+
+		@Override
+		public boolean getValor() {
+			return esq.getValor() ^ !dir.getValor();
 		}
 	}
 }
