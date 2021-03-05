@@ -6,8 +6,10 @@ seqComando: comando (';' comando)* ;
 
 comando: ID ':=' func                                    # atribuicao
 	   | ID ':=' expressao                               # atribuicao
+	   | parametros ':=' valores                         # atribuicaoParalela
        | 'skip'                                          # skip
        | 'se' booleano 'entao' comando ('senaose' booleano 'entao' comando)*? 'senao' comando   # se
+       | 'escolha' expressao ('caso' expressao ':' comando)* ('outro' ':' comando)?	# switch
        | 'enquanto' booleano 'faca' comando              # enquanto
        | 'para' ID 'de' expressao 'ate' expressao ('passo' expressao)? 'faca' comando	# para
        | 'exiba' TEXTO                                   # exiba
@@ -18,7 +20,9 @@ comando: ID ':=' func                                    # atribuicao
 func: '(' parametros ')' '=>' expressao                  # funcao
 ;
 
-parametros: ID (',' ID)*;
+parametros: ID (',' ID)*?;
+
+valores: expressao (',' expressao)*;
 
 
 expressao: INT                                           # inteiro

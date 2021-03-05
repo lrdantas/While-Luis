@@ -1,0 +1,4 @@
+escolha 2
+	caso 1 : exiba "um"
+    caso 2 : exiba "dois"
+    outro  : exiba "outro numero"

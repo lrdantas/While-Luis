@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import plp.enquanto.Linguagem.Bool;
 import plp.enquanto.Linguagem.Comando;
+import plp.enquanto.Linguagem.Expressao;
 
 interface Linguagem {
 	Map<String, Integer> ambiente = new HashMap<>();
@@ -21,6 +22,10 @@ interface Linguagem {
 	}
 
 	interface Expressao {
+		int getValor();
+	}
+	
+	interface Parametro {
 		int getValor();
 	}
 
@@ -69,6 +74,29 @@ interface Linguagem {
 			} else {
 				senao.execute();	
 			}						
+		}
+	}
+	
+	class Switch implements Comando {
+		private final Expressao resultado;
+		private final Comando outro;
+		private final Map<Integer, Comando> casoLista;
+		
+		public Switch(Expressao resultado,Comando outro, Map<Integer, Comando> casoLista) {
+			this.outro = outro;
+			this.casoLista = casoLista;
+			this.resultado = resultado;
+		}
+
+		@Override
+		public void execute() {
+			Comando comando;
+			if (casoLista.containsKey(resultado.getValor())) {
+				comando = casoLista.get(resultado.getValor());
+				comando.execute();
+			} else {
+				outro.execute();
+			}
 		}
 	}
 
@@ -175,6 +203,22 @@ interface Linguagem {
 		@Override
 		public void execute() {
 			ambiente.put(id, exp.getValor());
+		}
+	}
+	
+	class AtribuicaoParalela implements Comando {
+		private final Map<String, Expressao> listaParametros;
+
+		AtribuicaoParalela(Map<String, Expressao> listaParametros) {
+			this.listaParametros = listaParametros;
+		}
+
+		@Override
+		public void execute() {
+			for(String id : listaParametros.keySet()) {
+				ambiente.put(id, listaParametros.get(id).getValor());
+			}
+			
 		}
 	}
 

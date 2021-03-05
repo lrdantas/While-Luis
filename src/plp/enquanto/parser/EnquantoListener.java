@@ -40,6 +40,18 @@ public interface EnquantoListener extends ParseTreeListener {
 	 */
 	void exitAtribuicao(EnquantoParser.AtribuicaoContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code atribuicaoParalela}
+	 * labeled alternative in {@link EnquantoParser#comando}.
+	 * @param ctx the parse tree
+	 */
+	void enterAtribuicaoParalela(EnquantoParser.AtribuicaoParalelaContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code atribuicaoParalela}
+	 * labeled alternative in {@link EnquantoParser#comando}.
+	 * @param ctx the parse tree
+	 */
+	void exitAtribuicaoParalela(EnquantoParser.AtribuicaoParalelaContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code skip}
 	 * labeled alternative in {@link EnquantoParser#comando}.
 	 * @param ctx the parse tree
@@ -63,6 +75,18 @@ public interface EnquantoListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitSe(EnquantoParser.SeContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code switch}
+	 * labeled alternative in {@link EnquantoParser#comando}.
+	 * @param ctx the parse tree
+	 */
+	void enterSwitch(EnquantoParser.SwitchContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code switch}
+	 * labeled alternative in {@link EnquantoParser#comando}.
+	 * @param ctx the parse tree
+	 */
+	void exitSwitch(EnquantoParser.SwitchContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code enquanto}
 	 * labeled alternative in {@link EnquantoParser#comando}.
@@ -145,6 +169,16 @@ public interface EnquantoListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParametros(EnquantoParser.ParametrosContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link EnquantoParser#valores}.
+	 * @param ctx the parse tree
+	 */
+	void enterValores(EnquantoParser.ValoresContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link EnquantoParser#valores}.
+	 * @param ctx the parse tree
+	 */
+	void exitValores(EnquantoParser.ValoresContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code leia}
 	 * labeled alternative in {@link EnquantoParser#expressao}.

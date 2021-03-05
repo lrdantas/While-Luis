@@ -62,6 +62,27 @@ public class Regras extends EnquantoBaseListener {
     }
 	
 	@Override
+	public void exitSwitch(SwitchContext ctx) {
+	
+		final Expressao resultado = valores.pegue(ctx.expressao(0));
+
+        final Comando outro = valores.pegue(ctx.comando(ctx.comando().size() - 1));
+        
+        final Map<Integer, Comando> casoLista = new HashMap<Integer, Comando>();
+
+        if (ctx.comando().size() > 1) {
+            for (int i = 0; i < ctx.comando().size() - 1; i++) {
+                final Expressao _caso = valores.pegue(ctx.expressao(i + 1));
+                final Comando _comando = valores.pegue(ctx.comando(i));
+
+                casoLista.put(_caso.getValor(), _comando);             
+            }
+        }
+
+        valores.insira(ctx, new Switch(resultado, outro, casoLista));
+	}
+	
+	@Override
 	public void exitFuncao(FuncaoContext ctx) {
 		final List<Id> parametros = new ArrayList<Id>();
 		super.exitFuncao(ctx);
@@ -110,6 +131,24 @@ public class Regras extends EnquantoBaseListener {
 		final String id = ctx.ID().getText();
 		final Expressao exp = valores.pegue(ctx.expressao());
 		valores.insira(ctx, new Atribuicao(id, exp));
+	}
+	
+	@Override
+	public void exitAtribuicaoParalela(AtribuicaoParalelaContext ctx) {
+		final Map<String, Expressao> atribuicaoLista = new HashMap<String, Expressao>();
+		
+		int numeroParametros = ctx.parametros().children.size();
+
+		if (numeroParametros > 1) {
+			for (int i = 0; i < numeroParametros; i++) {
+				final String _parametro = valores.pegue(ctx.parametros().getChild(i));
+				final Expressao _valor = valores.pegue(ctx.valores().getChild(i));
+
+				atribuicaoLista.put(_parametro,  _valor);
+			}
+		}
+		valores.insira(ctx, new AtribuicaoParalela(atribuicaoLista));
+
 	}
 
 	@Override
