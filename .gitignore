@@ -1,3 +1,9 @@
 /bin/
 .idea/misc.xml
 .idea/workspace.xml
+target\generated-sources\
+*.interp
+*.tokens
+.classpath
+.project
+.settings\org.eclipse.core.resources.prefs

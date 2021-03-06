@@ -4,7 +4,7 @@ programa : seqComando;     // sequência de comandos
 
 seqComando: comando (';' comando)* ;
 
-comando: ID ':=' func                                    # atribuicao
+comando: ID ':=' func                                    # atribuicaoFuncao
 	   | ID ':=' expressao                               # atribuicao
 	   | parametros ':=' valores                         # atribuicaoParalela
        | 'skip'                                          # skip

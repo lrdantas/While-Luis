@@ -40,6 +40,18 @@ public class EnquantoBaseListener implements EnquantoListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterAtribuicaoFuncao(EnquantoParser.AtribuicaoFuncaoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAtribuicaoFuncao(EnquantoParser.AtribuicaoFuncaoContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterAtribuicao(EnquantoParser.AtribuicaoContext ctx) { }
 	/**
 	 * {@inheritDoc}

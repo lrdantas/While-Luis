@@ -216,7 +216,8 @@ interface Linguagem {
 		@Override
 		public void execute() {
 			for(String id : listaParametros.keySet()) {
-				ambiente.put(id, listaParametros.get(id).getValor());
+				if (!id.equals(","))
+					ambiente.put(id, listaParametros.get(id).getValor());
 			}
 			
 		}

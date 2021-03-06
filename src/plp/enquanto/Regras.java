@@ -141,7 +141,7 @@ public class Regras extends EnquantoBaseListener {
 
 		if (numeroParametros > 1) {
 			for (int i = 0; i < numeroParametros; i++) {
-				final String _parametro = valores.pegue(ctx.parametros().getChild(i));
+				final String _parametro = ctx.parametros().getChild(i).getText();
 				final Expressao _valor = valores.pegue(ctx.valores().getChild(i));
 
 				atribuicaoLista.put(_parametro,  _valor);

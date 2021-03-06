@@ -28,6 +28,18 @@ public interface EnquantoListener extends ParseTreeListener {
 	 */
 	void exitSeqComando(EnquantoParser.SeqComandoContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code atribuicaoFuncao}
+	 * labeled alternative in {@link EnquantoParser#comando}.
+	 * @param ctx the parse tree
+	 */
+	void enterAtribuicaoFuncao(EnquantoParser.AtribuicaoFuncaoContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code atribuicaoFuncao}
+	 * labeled alternative in {@link EnquantoParser#comando}.
+	 * @param ctx the parse tree
+	 */
+	void exitAtribuicaoFuncao(EnquantoParser.AtribuicaoFuncaoContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code atribuicao}
 	 * labeled alternative in {@link EnquantoParser#comando}.
 	 * @param ctx the parse tree

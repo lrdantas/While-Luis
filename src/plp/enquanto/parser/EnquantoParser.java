@@ -216,9 +216,6 @@ public class EnquantoParser extends Parser {
 	}
 	public static class AtribuicaoContext extends ComandoContext {
 		public TerminalNode ID() { return getToken(EnquantoParser.ID, 0); }
-		public FuncContext func() {
-			return getRuleContext(FuncContext.class,0);
-		}
 		public ExpressaoContext expressao() {
 			return getRuleContext(ExpressaoContext.class,0);
 		}
@@ -350,6 +347,21 @@ public class EnquantoParser extends Parser {
 			if ( listener instanceof EnquantoListener ) ((EnquantoListener)listener).exitEscreva(this);
 		}
 	}
+	public static class AtribuicaoFuncaoContext extends ComandoContext {
+		public TerminalNode ID() { return getToken(EnquantoParser.ID, 0); }
+		public FuncContext func() {
+			return getRuleContext(FuncContext.class,0);
+		}
+		public AtribuicaoFuncaoContext(ComandoContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof EnquantoListener ) ((EnquantoListener)listener).enterAtribuicaoFuncao(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof EnquantoListener ) ((EnquantoListener)listener).exitAtribuicaoFuncao(this);
+		}
+	}
 	public static class SkipContext extends ComandoContext {
 		public SkipContext(ComandoContext ctx) { copyFrom(ctx); }
 		@Override
@@ -395,7 +407,7 @@ public class EnquantoParser extends Parser {
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
 			case 1:
-				_localctx = new AtribuicaoContext(_localctx);
+				_localctx = new AtribuicaoFuncaoContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(26);
